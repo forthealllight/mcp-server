@@ -33,7 +33,7 @@ def create_mcp_server():
         """
         original_note = note.get(func_name)
         return f"""
-           
+
         定位
         1. 你是专业的火山引擎 CDN 专家，你理解火山 CDN 产品能力和业务场景，精通于为用户提供专业的技术支持服务。
         2. 为了提供最好的服务，你需要精准识别用户问题并进行拆解，调用工具（OpenAPI）获取匹配用户问题的内容，基于获取到的内容，你需要进行整合并分析，再返回给用户。
@@ -336,6 +336,82 @@ def create_mcp_server():
         2. After obtaining the parameter description, invoke  describe_origin_summary
         """
         reqs = service.mcp_post("McpDescribeOriginSummary", {}, json.dumps(body))
+
+        return HandlerVolcResponse(reqs)
+
+    @mcp.tool()
+    def list_domain_versions(body: dict) -> str:
+        """
+        获取指定域名下的所有版本。
+        Call steps:
+        1. Pass "list_domain_versions" as an input parameter to invoke the `get_note` method to obtain the parameter description.
+        2. After obtaining the parameter description, invoke  list_domain_versions
+        """
+        reqs = service.mcp_post("McpListDomainVersions", {}, json.dumps(body))
+
+        return HandlerVolcResponse(reqs)
+
+    @mcp.tool()
+    def describe_domain_version(body: dict) -> str:
+        """
+        获取指定版本中各 CDN 特性的配置详情。
+        Call steps:
+        1. Pass "describe_domain_version" as an input parameter to invoke the `get_note` method to obtain the parameter description.
+        2. After obtaining the parameter description, invoke  describe_domain_version
+        """
+        reqs = service.mcp_post("McpDescribeDomainVersion", {}, json.dumps(body))
+
+        return HandlerVolcResponse(reqs)
+
+    @mcp.tool()
+    def describe_domain_env_version(body: dict) -> str:
+        """
+
+        Call steps:
+        1. Pass "describe_domain_env_version" as an input parameter to invoke the `get_note` method to obtain the parameter description.
+        2. After obtaining the parameter description, invoke  describe_domain_env_version
+        """
+        reqs = service.mcp_post("McpDescribeDomainEnvVersion", {}, json.dumps(body))
+
+        return HandlerVolcResponse(reqs)
+
+    @mcp.tool()
+    def release_domain_version(body: dict) -> str:
+        """
+        将一个版本发布到指定的环境。
+        关于如何在预发布环境中测试域名配置，参见 预发布版本。
+        Call steps:
+        1. Pass "release_domain_version" as an input parameter to invoke the `get_note` method to obtain the parameter description.
+        2. After obtaining the parameter description, invoke  release_domain_version
+        """
+        reqs = service.mcp_post("McpReleaseDomainVersion", {}, json.dumps(body))
+
+        return HandlerVolcResponse(reqs)
+
+    @mcp.tool()
+    def create_domain_version(body: dict) -> str:
+        """
+        在 CDN 中通过复制一个现有版本来创建一个版本。在创建版本时，您可以指定需要修改的 CDN 特性配置。
+        要使用该 API，请 提交工单。
+        您无法修改版本中的 IPv6 配置和加速区域的配置。
+        Call steps:
+        1. Pass "create_domain_version" as an input parameter to invoke the `get_note` method to obtain the parameter description.
+        2. After obtaining the parameter description, invoke  create_domain_version
+        """
+        reqs = service.mcp_post("McpCreateDomainVersion", {}, json.dumps(body))
+
+        return HandlerVolcResponse(reqs)
+
+    @mcp.tool()
+    def update_domain_version(body: dict) -> str:
+        """
+        更新一个版本中的 CDN 特性配置。关于各 CDN 特性的配置详情，参见 UpdateCdnConfig。
+        您无法修改版本中的 IPv6 配置和加速区域的配置。
+        Call steps:
+        1. Pass "update_domain_version" as an input parameter to invoke the `get_note` method to obtain the parameter description.
+        2. After obtaining the parameter description, invoke  update_domain_version
+        """
+        reqs = service.mcp_post("McpUpdateDomainVersion", {}, json.dumps(body))
 
         return HandlerVolcResponse(reqs)
 
