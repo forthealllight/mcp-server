@@ -83,6 +83,24 @@ api_info = {
         {},
         {},
     ),
+    "McpListDomainVersions": ApiInfo(
+        "POST", "/", {"Action": "ListDomainVersions", "Version": "2021-03-01"}, {}, {}
+    ),
+    "McpDescribeDomainVersion": ApiInfo(
+        "POST", "/", {"Action": "DescribeDomainVersion", "Version": "2021-03-01"}, {}, {}
+    ),
+    "McpDescribeDomainEnvVersion": ApiInfo(
+        "POST", "/", {"Action": "DescribeDomainEnvVersion", "Version": "2021-03-01"}, {}, {}
+    ),
+    "McpReleaseDomainVersion": ApiInfo(
+        "POST", "/", {"Action": "ReleaseDomainVersion", "Version": "2021-03-01"}, {}, {}
+    ),
+    "McpCreateDomainVersion": ApiInfo(
+        "POST", "/", {"Action": "CreateDomainVersion", "Version": "2021-03-01"}, {}, {}
+    ),
+    "McpUpdateDomainVersion": ApiInfo(
+        "POST", "/", {"Action": "UpdateDomainVersion", "Version": "2021-03-01"}, {}, {}
+    ),
 }
 service_info_map = {
     "cn-north-1": ServiceInfo(
