@@ -1777,6 +1777,8 @@ note = {
                   - filetype：表示请求 URL 中的扩展名。
                   - directory：表示请求 URL 中的某个目录。
                   - path：表示请求 URL 中的完整路径。
+                  - regex：表示请求 URL 中的路径，通过正则表达式匹配。
+                  要指定 regex，请 提交工单。
             Operator ( String ): 是  表示匹配类型。该参数的值只能是 match，表示如果 Value 匹配了请求中的 Object，该请求就满足这个匹配条件。
             Type ( String ): 是  该参数值只能是 url，表示 "请求 URL"。
             Value ( String ): 是  表示一个或者多个匹配值，总长度不能超过 1,024 个字符。多个匹配值之间使用分号（;）分隔。匹配值不能包含以下字符：
@@ -2197,6 +2199,7 @@ note = {
                   - true：表示在分片 URI 中添加查询参数。
                   - false：表示不添加查询参数。
                   该参数的默认值是 false。需要留意的是，该参数的设置影响签名的计算。参见 M3U8 改写功能的字段描述。
+            RewriteTag ( Object of RewriteTag ): 否  表示 "标签改写" 的配置。
            "字段"： TosAuthInformation
             参数 ( 类型 ): 是否必选  描述
             ---- ( ---- ): ----  ----
@@ -2269,6 +2272,13 @@ note = {
                   	- 字母、数字、连字符（-）、逗号（,）、句号（.）、感叹号（!）
                   - 如果 Type 是 requestHeader，变量名称不能包含以下字符：
                   	- 下划线（_）、空格、双引号（"）、冒号（:）
+           "字段"： RewriteTag
+            参数 ( 类型 ): 是否必选  描述
+            ---- ( ---- ): ----  ----
+            Switch ( Boolean ): 否  表示是否需要改写额外标签中的分片 URL。该参数有以下取值：
+                  - true：表示需要改写额外标签。
+                  - false：表示无额外标签需要改写。
+            Tags ( Array of String ): 否  表示除默认标签外，需要对其下分片 URI 进行改写的额外标签列表。
     Returns:
         参数 ( 类型 ): 描述
         ---- ( ---- ): ----
@@ -3155,6 +3165,8 @@ note = {
                   - filetype：表示请求 URL 中的扩展名。
                   - directory：表示请求 URL 中的某个目录。
                   - path：表示请求 URL 中的完整路径。
+                  - regex：表示请求 URL 中的路径，通过正则表达式匹配。
+                  要指定 regex，请 提交工单。
             Operator ( String ): 是  表示匹配类型。该参数的值只能是 match，表示如果 Value 匹配了请求中的 Object，该请求就满足这个匹配条件。
             Type ( String ): 是  该参数值只能是 url，表示 "请求 URL"。
             Value ( String ): 是  表示一个或者多个匹配值，总长度不能超过 1,024 个字符。多个匹配值之间使用分号（;）分隔。匹配值不能包含以下字符：
@@ -3575,6 +3587,7 @@ note = {
                   - true：表示在分片 URI 中添加查询参数。
                   - false：表示不添加查询参数。
                   该参数的默认值是 false。需要留意的是，该参数的设置影响签名的计算。参见 M3U8 改写功能的字段描述。
+            RewriteTag ( Object of RewriteTag ): 否  表示 "标签改写" 的配置。
            "字段"： TosAuthInformation
             参数 ( 类型 ): 是否必选  描述
             ---- ( ---- ): ----  ----
@@ -3647,6 +3660,13 @@ note = {
                   	- 字母、数字、连字符（-）、逗号（,）、句号（.）、感叹号（!）
                   - 如果 Type 是 requestHeader，变量名称不能包含以下字符：
                   	- 下划线（_）、空格、双引号（"）、冒号（:）
+           "字段"： RewriteTag
+            参数 ( 类型 ): 是否必选  描述
+            ---- ( ---- ): ----  ----
+            Switch ( Boolean ): 否  表示是否需要改写额外标签中的分片 URL。该参数有以下取值：
+                  - true：表示需要改写额外标签。
+                  - false：表示无额外标签需要改写。
+            Tags ( Array of String ): 否  表示除默认标签外，需要对其下分片 URI 进行改写的额外标签列表。
     """,
     "describe_domain_env_version": r"""
     Args:
@@ -3692,13 +3712,1110 @@ note = {
         UpdateTime ( Long ): 表示版本的最近更新时间，格式是 Unix 时间戳。
         VersionId ( String ): 表示该版本的版本号。
        "字段"： DomainConfig
-        参数 ( 类型 ): 描述
-        ---- ( ---- ): ----
-        ServerSentEvent ( Object of ServerSentEvent ): SSE协议
-       "字段"： ServerSentEvent
-        参数 ( 类型 ): 描述
-        ---- ( ---- ): ----
-        Switch ( Boolean ): 无
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Origin ( Array of Origin ): 表示源站配置。 
+        OriginProtocol ( String ): 表示回源请求使用的协议。该参数有以下取值： 
+            - http：表示回源请求使用 HTTP 协议。 
+            - https：表示回源请求使用 HTTPS 协议。 
+            - followclient：表示回源协议与用户请求使用的协议相同。 
+        ServiceType ( String ): 表示该域名的业务类型。该参数有以下取值： 
+            - download：表示文件下载。 
+            - web：表示网页。 
+            - video：表示音视频点播。 
+        AreaAccessRule ( Object of AreaAccessRule ): 表示 "地域访问控制" 特性的配置。 
+        BrowserCache ( Array of BrowserCache ): 表示 "浏览器缓存" 特性的配置。该配置包含一个规则列表，说明如下： 
+            - 每条规则包含匹配条件配置和操作配置。 
+            - 规则在列表中出现的顺序表示规则的优先级。列表中第一条规则的优先级最高。 
+            - 当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+        Cache ( Array of Cache ): 表示 "缓存规则" 特性的配置。该特性默认为禁用，表示不创建自定义规则。 
+            - 列表中规则的顺序定义了规则的优先级。列表中第一条规则的优先级最高。  
+            - 当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+            CDN 中有一条 默认缓存规则，，用于匹配任何未能匹配其他规则的用户请求。该默认规则始终生效，并且优先级最低。 
+        CacheHost ( Object of CacheHost ): 表示 "共享缓存" 特性的配置。 
+        CacheKey ( Array of CacheKey ): 表示 "缓存键值" 特性的配置。该配置中包含一个规则列表，说明如下： 
+            - 每条规则包含匹配条件配置和操作配置。 
+            - 规则在列表中出现的顺序表示规则的优先级。列表中第一条规则的优先级最高。 
+            - 当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+        Cname ( String ): 表示内容分发网络为该加速域名分配的 CNAME。 
+        Compression ( Object of Compression ): 表示 "智能压缩" 特性的配置。 
+        CreateTime ( Long ): 表示该加速域名的创建时间，格式是 Unix 时间戳。 
+        CustomErrorPage ( Object of CustomErrorPage ): 表示 "自定义错误页面" 特性的配置。 
+        CustomizeAccessRule ( Object of CustomizeAccessRule ): 表示 "自定义头部黑白名单" 特性的配置。 
+        Domain ( String ): 表示该加速域名。 
+        DownloadSpeedLimit ( Object of DownloadSpeedLimit ): 表示 "下载限速" 特性的配置。 
+        FollowRedirect ( Boolean ): 表示 "回源重定向跟随" 特性的配置。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        HTTPS ( Object of HTTPS ): 表示 HTTPS 特性的配置。 
+        HttpForcedRedirect ( Object of HttpForcedRedirect ): 表示 "HTTPS 强制跳转到 HTTP" 特性的配置。 
+        IPv6 ( Object of IPv6 ): 表示 IPv6 配置。 
+        IpAccessRule ( Object of IpAccessRule ): 表示 "IP 黑白名单" 特性的配置。 
+            该特性提供了两种配置方式： 
+            - 常规配置：指定 RuleType 和 Ip 对当前加速域名进行配置。 
+            - 全局配置：指定 SharedConfig 使用一个全局配置。 
+        LockStatus ( String ): 表示该域名的配置是否允许被变更。该参数有以下取值： 
+            - on：表示允许。 
+            - off：表示不允许。 
+        MethodDeniedRule ( Object of MethodDeniedRule ): 表示 "禁用 HTTP Method" 特性的配置。 
+        NegativeCache ( Array of NegativeCache ): 表示 "状态码缓存" 特性的配置。该配置包含一个规则列表，说明如下： 
+            - 每条规则包含过匹配条件配置和操作配置。 
+            - 规则在列表中出现的顺序表示规则的优先级。列表中第一条规则的优先级最高。 
+            - 当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+        OriginAccessRule ( Object of OriginAccessRule ): 表示 "Origin 黑白名单" 特性的配置。 
+        OriginArg ( Array of OriginArg ): 表示 "回源参数" 配置的规则列表。 
+            - 每条规则包含一个匹配条件（Condition）和 CDN 执行操作（OriginArgAction）。 
+            - 列表中规则的顺序定义了规则的优先级。列表中第一条规则的优先级最高。 
+            - 当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+        OriginHost ( String ): 如果源站服务器上有多个站点，该参数表示回源请求访问的站点域名。该参数对所有源站配置生效，但是优先级低于源站配置中 OriginHost 参数。 
+        OriginRange ( Boolean ): 表示 "回源 Range" 特性的配置。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+            请求分片大小默认是 1 MB。 
+            如果 Range 结构体中 Switch 为 true，则该特性为启用，即使 OriginRange 为 false。 
+        OriginRewrite ( Object of OriginRewrite ): 表示 "回源 URL 改写" 特性的配置。 
+        OriginSni ( Object of OriginSni ): 表示 "回源 SNI" 特性的配置。 
+        PageOptimization ( Object of PageOptimization ): 表示 "页面优化" 特性的配置。 
+        Project ( String ): 表示该加速域名归属的项目。 
+        Quic ( Object of Quic ): 表示 QUIC 配置。 
+        RedirectionRewrite ( Object of RedirectionRewrite ): 表示 "URL 重定向改写" 特性的配置。 
+        RefererAccessRule ( Object of RefererAccessRule ): 表示 "Referer 黑白名单" 特性的配置。关于不同配置对请求匹配结果的影响，参见 配置示例。 
+        RemoteAuth ( Object of RemoteAuth ): 表示 "远程鉴权" 特性的配置。 
+        RequestHeader ( Array of RequestHeader ): 表示 "回源 HTTP 请求头" 特性的配置。 
+        ResponseHeader ( Array of ResponseHeader ): 表示 "HTTP 响应头" 特性的配置。 
+        ServiceRegion ( String ): 表示该加速域名的加速区域。该参数有以下取值： 
+            - chinese_mainland：表示中国内地。 
+            - global：表示全球。 
+            - outside_chinese_mainland：表示全球（不含中国内地）。 
+        SignedUrlAuth ( Object of SignedUrlAuth ): 表示 "URL 鉴权" 特性的配置。 
+        Status ( String ): 表示该加速域名的状态。该参数有以下取值： 
+            - online：表示状态是 正常运行。 
+            - configuring：表示状态是 配置中。 
+            - offline：表示状态是 已下线。 
+        Timeout ( Object of Timeout ): 表示 "回源超时时间" 特性的配置。 
+        UaAccessRule ( Object of UaAccessRule ): 表示 "UA 黑白名单" 特性的配置。 
+        UpdateTime ( Long ): 表示该域名配置的最近一次的更新时间，格式是 Unix 时间戳。如果该域名配置在创建后未被更新，该参数值与 CreateTime 的值相同。 
+        VideoDrag ( Object of VideoDrag ): 表示 "视频拖拽" 特性的配置。 
+        OriginIPv6 ( String ): 表示 "IPv6 回源" 的配置。该参数有以下取值： 
+            - ipv6_first：表示 CDN 始终尝试获取源站域名的 IPv6 地址。如果无法获取该 IP 地址，CDN 才尝试获取源站域名的 IPv4 地址。 
+            - ipv4_first：表示 CDN 始终尝试获取源站域名的 IPv4 地址。如果无法获取该 IP 地址，CDN 才尝试获取源站域名的 IPv6 地址。 
+            - followclient：表示 CDN 尝试获取与用户请求相同类型的 IP 地址。 
+            由于海外部分 CDN 回源节点不支持向 IPv6 地址发送回源请求，该功能仅适用于位于中国内地的回源节点。 
+        RequestBlockRule ( Object of RequestBlockRule ): 表示 "自定义拦截" 特性的配置。 
+        UrlNormalize ( Object of UrlNormalize ): 表示 "URL 标准化" 特性的配置。 
+        OriginCertCheck ( Object of OriginCertCheck ): 表示 "源站证书校验" 特性的配置。 
+            该特性启用后，CDN 会校验源站证书的合法性，包括证书是否已被吊销、证书是否由可信 CA 签发、证书与源站域名是否匹配等。CDN 内置了常见可信 CA 的根证书。 
+            该特性还支持双向认证，使源站对 CDN 身份进行校验。 
+        ConditionalOrigin ( Object of ConditionalOrigin ): 表示 "条件源站" 特性的配置。 
+        OriginRetry ( Object of OriginRetry ): 表示 "回源重试设置" 特性的配置。 
+        RewriteHLS ( Object of RewriteHLS ): 表示 "标准 HLS 加密改写" 特性的配置。 
+        MultiRange ( Object of MultiRange ): 表示 "多重范围（Multi-range)" 特性的配置。 
+        RuleEngine ( Object of RuleEngine ): 详情参见 规则引擎配置。 
+        OfflineCache ( Object of OfflineCache ): 表示 "离线缓存" 特性的配置。 
+        OriginResponseHeader ( Array of OriginResponseHeader ): 表示 "源站响应头设置" 的配置。 
+        Range ( Object of Range ): 表示分片大小的设置。 
+       "字段"： Origin
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginAction ( Object of OriginAction ): 表示源站配置，应用于所有用户请求。 
+       "字段"： AreaAccessRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Area ( Array of String ): 表示一个国家和地区的列表，对该列表应用地域访问限制。国家和地区的名称使用简写来表示。您可以调用 DescribeCdnRegionAndIsp 并指定 Area 为 Global 以获取国家和地区的简写。 
+        RuleType ( String ): 表示 Area 的类型。该参数有以下取值： 
+            - deny: 表示 Area 是一个黑名单。CDN 将阻止来自这些国家和地区的请求。 
+            - allow: 表示 Area 是一个白名单。CDN 仅允许来自这些国家和地区的请求。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： BrowserCache
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CacheAction ( Object of CacheAction ): 当一个请求满足 Condition 中的匹配条件时，CDN 会对请求文件执行指定的操作。该参数定义了该操作相关的配置。 
+        Condition ( Object of Condition ): 表示匹配条件的配置。如果请求匹配了某个条件，CDN 对该请求执行 CacheAction 中指定的操作。 
+       "字段"： Cache
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CacheAction ( Object of CacheAction ): 当一个请求满足 Condition 中的匹配条件时，CDN 会对请求文件执行指定的操作。该参数定义了该操作相关的配置。 
+        Condition ( Object of Condition ): 表示匹配条件的配置。如果请求匹配了某个条件，CDN 对该请求执行 CacheAction 中指定的操作。 
+       "字段"： CacheHost
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CacheHostRule ( Array of CacheHostRule ): 表示一组共享缓存 HOST 的配置。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： CacheKey
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CacheKeyAction ( Object of CacheKeyAction ): 当一个请求满足 Condition 中的匹配条件时，CDN 会为请求文件设置缓存键。该参数表示缓存键的配置。 
+        Condition ( Object of Condition ): 表示匹配条件的配置。如果请求匹配了某个条件，CDN 对该请求执行 CacheKeyAction 中指定的操作。 
+       "字段"： Compression
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        CompressionRules ( Array of CompressionRules ): 表示一组规则。每条规则包含匹配条件配置以及操作配置。 
+       "字段"： CustomErrorPage
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        ErrorPageRule ( Array of ErrorPageRule ): 表示一个配置规则的集合。 
+       "字段"： CustomizeAccessRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CustomizeInstances ( Array of CustomizeInstances ): 表示一个规则列表。列表中的每条规则中定义了一个黑名单或者白名单的配置。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： DownloadSpeedLimit
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        DownloadSpeedLimitRules ( Array of DownloadSpeedLimitRules ): 表示一个限速规则的列表。该参数的其他说明如下： 
+            - 每条规则包含匹配条件配置和限速配置。 
+            - 列表中规则的出现顺序表示规则的优先级排序。列表中第一条规则的优先级最高。 
+            - 当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+       "字段"： HTTPS
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        CertInfo ( Object of CertInfo ): 表示要与加速域名关联的单本证书的信息。 
+        CertInfoList ( Array of CertInfoList ): 表示要与加速域名关联的双证书。 
+        DisableHttp ( Boolean ): 表示是否允许请求 URL 中 Scheme 是 HTTP 的请求。该参数有以下取值： 
+            - true：表示允许 Scheme 是 HTTP 的请求。 
+            - false：表示不允许 Scheme 是 HTTP 的请求。 
+        ForcedRedirect ( Object of ForcedRedirect ): 表示 "HTTP 强制跳转到 HTTPS" 特性的配置。 
+            CDN 提供了两种协议重定向的特性。 
+            * HTTP 重定向到 HTTPS，也就是 ForcedRedirect 特性。 
+            * HTTPS 重定向到 HTTP，也就是 HttpForcedRedirect 特性。 
+            这两个协议重定向特性是互斥的。 
+        HTTP2 ( Boolean ): 表示是否为用户请求启用 HTTP/2 支持。该参数有以下取值： 
+            - true：表示启用 HTTP/2。 
+            - false：表示禁用 HTTP/2。 
+        Hsts ( Object of Hsts ): 表示 HSTS 特性的配置。 
+        OCSP ( Boolean ): 表示是否启用 "OCSP 装订" 特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        TlsVersion ( Array of String ): 表示 "TLS 版本" 特性的配置。该参数指定用户请求可以使用的 TLS 版本，有以下取值： 
+            - tlsv1.0：表示 TLS 1.0。 
+            - tlsv1.1：表示 TLS 1.1。 
+            - tlsv1.2：表示 TLS 1.2。 
+            - tlsv1.3：表示 TLS 1.3。 
+        CertCheck ( Object of CertCheck ): 表示 "访问双向认证" 特性的配置。 
+       "字段"： HttpForcedRedirect
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        EnableForcedRedirect ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。启用后，CDN 会将收到的 HTTPS 请求重定向到 HTTP 请求。 
+            - false：表示禁用该特性。CDN 不会将 HTTPS 请求重定向到 HTTP 请求。 
+        StatusCode ( String ): 表示当收到 HTTPS 请求时，CDN 返回的重定向状态码。该参数有以下取值：301、302、303、307、308。 
+            需要留意的是： 
+            * 对于 301 和 302，如果原请求使用的方法不是 GET，那么客户端向新的URL发送请求时，新请求使用的方法可能变成 GET。 
+            * 对于 303，新请求使用的方法是 GET。 
+            * 对于 307 和 308，新请求使用的方法与原请求相同，不会被改变。 
+       "字段"： IPv6
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： IpAccessRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Ip ( Array of String ): 表示黑名单或白名单中的 IP 地址。 
+        RuleType ( String ): 表示 IP 名单的类型。该参数有以下取值： 
+            - allow：表示白名单。 
+            - deny：表示黑名单。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        SharedConfig ( Object of SharedConfig ): 表示一个全局配置。 
+        DenyStatusCode ( Long ): 表示 CDN 在拒绝请求时响应的状态码，如果该配置不指定，则 CDN 响应 403 状态码。 
+        IpSource ( Object of IpSource ): 表示客户端 IP 地址获取方式的配置。 
+       "字段"： MethodDeniedRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        Methods ( String ): 表示被禁用的一个或多个 HTTP 请求方法。该参数有以下取值： 
+            - get：表示禁用 GET 请求方法。 
+            - post：表示禁用 POST 请求方法。 
+            - delete：表示禁用 DELETE 请求方法。 
+            - put：表示禁用 PUT 请求方法。 
+            - head：表示禁用 HEAD 请求方法。 
+            - patch：表示 PATCH 请求方法。 
+            - connect：表示 CONNECT 请求方法。 
+            - options：表示 OPTIONS 请求方法。 
+       "字段"： NegativeCache
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        NegativeCacheRule ( Object of NegativeCacheRule ): 当一个请求满足 Condition 中的匹配条件时，CDN 会对请求文件执行指定的操作。该参数定义了该操作相关的配置。 
+        Condition ( Object of Condition ): 表示匹配条件的配置。如果请求匹配了某个条件，CDN 对该请求执行 NegativeCacheRule 中指定的操作。 
+       "字段"： OriginAccessRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        AllowEmpty ( Boolean ): 表示当用户请求不包含 Origin 头部时，CDN 处理请求的方式。该参数有以下取值： 
+            - true：表示如果请求不包含 Origin 头部，则该请求被认为匹配您配置的 Origin 列表。 
+            - false：表示如果请求不包含 Origin 头部，则该请求被认为不匹配您配置的 Origin 列表。 
+        IgnoreCase ( Boolean ): 表示 Origin 列表是否是大小写敏感的。该参数有以下取值： 
+            - true: 表示 Origin 列表是大小写不敏感的。 
+            - false: 表示 Origin 列表是大小写敏感的。 
+        Origins ( Array of String ): 表示一个 Origin 列表。 
+        RuleType ( String ): 表示 Origin 列表的类型。该参数有以下取值： 
+            - allow：表示白名单。 
+            - deny：表示黑名单。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： OriginArg
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Condition ( Object of Condition ): 表示匹配条件的配置。如果请求满足该匹配条件，CDN 执行 OriginArgAction 中指定的操作。 
+        OriginArgAction ( Object of OriginArgAction ): 表示在请求满足 Condition 时 CDN 执行的操作。 
+       "字段"： OriginRewrite
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginRewriteRule ( Array of OriginRewriteRule ): 表示一个规则列表。当 Switch 是 true 时，该参数为必填。 
+            * 列表中规则的顺序定义了规则的优先级。列表中第一条规则的优先级最高。 
+            * 当收到一个用户请求时，CDN 按规则的优先级，从高到低尝试将请求与规则匹配。如果请求匹配了一条规则，CDN 就停止处理其余规则。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： OriginSni
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        SniDomain ( String ): 表示回源 SNI 的域名。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： PageOptimization
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OptimizationType ( Array of String ): 表示优化的对象。该参数有以下取值： 
+            - html: 表示 HTML 页面。 
+            - js: 表示 Javascript 代码。 
+            - css: 表示 CSS 代码。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： Quic
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否为用户请求启用 QUIC。该参数有以下取值： 
+            - true：表示启用 QUIC。 
+            - false：表示禁用 QUIC。 
+       "字段"： RedirectionRewrite
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        RedirectionRule ( Array of RedirectionRule ): 表示一个 URL 重定向改写的规则的列表。列表中第一条规则的优先级最高。 
+            当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+       "字段"： RefererAccessRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        AllowEmpty ( Boolean ): 表示当用户请求不包含 Referer 头部时，CDN 处理请求的方式。该参数有以下取值： 
+            - true：表示如果请求不包含 Referer 头部，则该请求被认为匹配您配置的 Referer 列表。 
+            - false：表示如果请求不包含 Referer 头部，则该请求被认为不匹配您配置的 Referer 列表。 
+        Referers ( Array of String ): 表示一个 Referer 列表，该参数的输入要求与 ReferersType 下 CommonType 类型的 Referers 的输入要求相同。 ReferersType 是推荐使用的。 
+            另外，如果指定了 SharedConfig，就不能指定该参数。 
+        ReferersType ( Object of ReferersType ): 表示一个 ReferersType 对象。其包含一个 CommonType 对象和一个 RegularType 对象，分别表示一个常规 Referer 列表和一个用于匹配 Referer 的正则表达式列表。这两个对象可以同时定义。 
+            如果指定了 SharedConfig，就不能指定该参数。 
+        RuleType ( String ): 表示 Referer 名单的类型。该参数有以下取值： 
+            - allow：表示白名单。 
+            - deny：表示黑名单。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        SharedConfig ( Object of SharedConfig ): 表示一个全局配置。 
+            如果指定了该参数，除了 Switch 和 RuleType 以外，RefererAccessRule 下的其余参数都无需指定。 
+       "字段"： RemoteAuth
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        RemoteAuthRules ( Array of RemoteAuthRules ): 表示一个鉴权规则的列表。规则包含匹配条件配置和鉴权配置。 
+       "字段"： RequestHeader
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        RequestHeaderAction ( Object of RequestHeaderAction ): 表示头部的相关操作设置。 
+       "字段"： ResponseHeader
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        ResponseHeaderAction ( Object of ResponseHeaderAction ): 表示 CDN 在响应用户请求的时候，对响应头的操作。 
+       "字段"： SignedUrlAuth
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        SignedUrlAuthRules ( Array of SignedUrlAuthRules ): 表示一个规则列表。每条规则包含匹配条件配置和鉴权配置。 
+       "字段"： Timeout
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。此时，TCP 请求和 HTTP 请求的超时时间使用默认值，分别是 2 秒和 60 秒。 
+        TimeoutRules ( Array of TimeoutRules ): 表示一组超时时间的配置。 
+       "字段"： UaAccessRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        AllowEmpty ( Boolean ): 表示当用户请求不包含 User-Agent 头部时，CDN 处理请求的方式。该参数有以下取值： 
+            - true：表示如果请求不包含 User-Agent 头部，则该请求被认为匹配您配置的 User-Agent 列表。 
+            - false：表示如果请求不包含 User-Agent 头部，则该请求被认为不匹配您配置的 User-Agent 列表。 
+        IgnoreCase ( Boolean ): 表示 UA 字符串是否是大小写敏感的。该参数有以下取值： 
+            - true: 表示 UA 字符串是大小写不敏感的。 
+            - false: 表示 UA 字符串是大小写敏感的。 
+        RuleType ( String ): 表示指定的是黑名单还是白名单。该参数有以下取值： 
+            - deny: 表示指定的是黑名单。 
+            - allow: 表示指定的是白名单。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        UserAgent ( Array of String ): 表示一个 UA 的列表。 
+        SharedConfig ( Object of SharedConfig ): 表示一个全局配置。 
+       "字段"： VideoDrag
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： RequestBlockRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        BlockRule ( Array of BlockRule ): 表示一个规则列表。 
+            列表中第一条规则的优先级最高。 
+            当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： UrlNormalize
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        NormalizeObject ( Array of String ): 表示一个 URL 标准化选项列表。列表中可包含的选项值说明如下： 
+            - dot_segments：表示将请求 URL 中的以下内容进行替换： 
+            	- /./：替换为单个斜杠（/）。 
+            	- /../：如果 /../ 前还有一个级别的目录，则删除 /../ 与该目录。如果 /../ 前没有目录，则保留原 URL。 
+            - back_slashes：表示将请求 URL 中的反斜杠（）替换为单个斜杠（/）。 
+            - successive_slashes：表示将请求 URL 中连续斜杠（//）替换为单个斜杠（/）。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： OriginCertCheck
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        CertInfoList ( Array of CertInfoList ): 表示一个 CA 证书列表。列表中的证书不能是国密证书，证书来源可以是 CDN 托管或者火山引擎证书中心。CDN 使用该列表中的证书对来自源站的服务器证书进行校验。 
+        ClientCertInfoList ( Array of ClientCertInfoList ): 仅当 Type 为 mutual 时，该参数有效。 
+            该参数表示一个客户端证书列表。列表中的证书不能是国密证书，证书来源可以是 CDN 托管或者火山引擎证书中心。源站使用该列表中的证书对 CDN 身份进行校验。 
+        Type ( String ): 表示校验类型，有以下取值： 
+            * unilateral：表示单向认证。 
+            * mutual：表示双向认证。 
+       "字段"： ConditionalOrigin
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginRules ( Array of OriginRules ): 表示一个规则列表。列表中的每条规则中定义了一组匹配条件以及 CDN 对满足匹配条件的请求所执行的操作。 
+            当收到一个用户请求时，CDN 按规则的优先级，从高到低将规则与请求匹配。如果一条规则匹配了请求，CDN 就停止处理其余规则。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： OriginRetry
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        StatusCode ( String ): 表示范围在 400-599 之间的一个或者多个状态码。状态码可以是 4xx 或者 5xx，表示所有以数字 4 或 数字 5 开头的状态码。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： RewriteHLS
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        SignName ( String ): 表示签名参数的名称。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： MultiRange
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            * true：表示启用该特性。该特性启用后，CDN 允许指定了多重范围的 Range 请求。 
+            * false：表示不启用该特性。如果收到一个指定了多重范围的 Range 请求，CDN 会拒绝该请求并返回 416 响应状态码。 
+       "字段"： OfflineCache
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Object ( String ): 表示该特性的触发条件，该参数有以下取值： 
+            - request_error：表示回源请求异常。当回源请求出现异常时，CDN 无法从源站获取文件，并且 CDN 没有获得任何来自源站的响应状态码。 
+            - error_code：表示 CDN 无法从源站获取文件，并且源站的响应状态码是 5xx。 
+            - request_error,error_code：表示以上两个条件都包含。 
+        StatusCode ( String ): 表示一个或者多个响应状态码。 
+            当 Object 是 error_code 或者 request_error,error_code 时，该参数才有效。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： OriginResponseHeader
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginResponseHeaderAction ( Object of OriginResponseHeaderAction ): 表示 CDN 在收到源站响应时，对响应头的操作。 
+       "字段"： Range
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        RangeSize ( Long ): 表示分片的大小。 
+        Switch ( Boolean ): 表示是否启用该设置。该参数有以下取值： 
+            * true：表示启用该设置。 
+            * false：表示禁用该设置。 
+        Unit ( String ): 表示 RangeSize 的单位。该参数有以下取值： 
+            * KB 
+            * MB 
+       "字段"： OriginAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginLines ( Array of OriginLines ): 表示一个源站列表。列表中最多可以包含 50 个源站。 
+       "字段"： CacheAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示浏览器需要执行的操作。该参数值始终是 cache，表示缓存请求的文件。DefaultPolicy 中指定了如何缓存请求的文件。 
+        IgnoreCase ( Boolean ): 表示 Value 是否是大小写敏感的。 
+            - true：表示大小写不敏感。 
+            - false：表示大小写敏感。 
+        Ttl ( Long ): 表示浏览器需要缓存请求文件的时长，单位是秒。CDN 会在响应头中包含 Cache-Control: max-age 头部，头部值就是该参数值。 
+        DefaultPolicy ( String ): 表示浏览器该如何缓存请求的文件。该参数有以下取值： 
+            - cache：表示需要缓存请求的文件。 
+            - origin_first：表示遵循来自源站的缓存策略。该策略会包含在 CDN 的响应中。 
+            - no_cache：表示不需要缓存请求的文件。 
+            关于浏览器缓存策略的详细信息，参见 浏览器缓存策略。 
+       "字段"： Condition
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        ConditionRule ( Array of ConditionRule ): 表示匹配条件列表。 
+       "字段"： CacheHostRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CacheHostAction ( Object of CacheHostAction ): 表示配置的详情。 
+       "字段"： CacheKeyAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CacheKeyComponents ( Array of CacheKeyComponents ): 缓存键是由请求中的 host、路径和查询字符串等部分组成。该参数表示其中各组成部分的配置。 
+       "字段"： CompressionRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CompressionAction ( Object of CompressionAction ): 表示当用户请求满足 Condition 时，CDN 对请求文件执行的压缩操作的配置。 
+        Condition ( Object of Condition ): 表示匹配条件的配置。如果请求匹配了某个条件，CDN 对该请求执行 CompressionAction 中指定的操作。 
+            需要留意的是，如果 CompressionFormat 指定了，Condition 的值为 null 或者不指定。 
+       "字段"： ErrorPageRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        ErrorPageAction ( Object of ErrorPageAction ): 表示规则的相关配置。 
+       "字段"： CustomizeInstances
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CustomizeRule ( Object of CustomizeRule ): 表示列表中一条规则的配置。 
+       "字段"： DownloadSpeedLimitRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        DownloadSpeedLimitAction ( Object of DownloadSpeedLimitAction ): 表示限速配置。 
+        Condition ( Object of Condition ): 表示匹配条件的配置。如果请求匹配了某个条件，CDN 对该请求执行 DownloadSpeedLimitAction 中指定的操作。 
+            如果不指定该参数，CDN 对所有请求执行 DownloadSpeedLimitAction 中指定的操作。 
+       "字段"： CertInfo
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CertId ( String ): 表示要关联的证书 ID。 
+        Certificate ( Object of Certificate ): 表示一个待上传的证书。上传后的证书是托管在 CDN 的。 
+       "字段"： CertInfoList
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CertId ( String ): 表示双证书中的一本证书的 ID。 
+       "字段"： ForcedRedirect
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        EnableForcedRedirect ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。启用后，CDN 会将收到的 HTTP 请求重定向到 HTTPS 请求。 
+            - false：表示禁用该特性。禁用后，CDN 不会将 HTTP 请求重定向到 HTTPS 请求。 
+        StatusCode ( String ): 表示当收到 HTTPS 请求时 CDN 的重定向响应状态码。该参数有以下取值：301、302、303、307、308。 
+            需要留意的是： 
+            * 对于 301 和 302，如果原请求使用的方法不是 GET，那么客户端向新的URL发送请求时，新请求使用的方法可能变成 GET。 
+            * 对于 303，新请求使用的方法是 GET。 
+            * 对于 307 和 308，新请求使用的方法与原请求相同，不会被改变。 
+       "字段"： Hsts
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Subdomain ( String ): 表示 HSTS 配置是否也应用于加速域名的子域名。该参数有以下取值： 
+            - include：表示 HSTS 配置应用于子域名站点。 
+            - exclude：表示 HSTS 配置不应用于子域名站点。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+        Ttl ( Long ): 表示 Strict-Transport-Security 响应头在浏览器中的缓存过期时间，单位是秒。如果该参数值为 0，其效果等同于禁用 HSTS 设置。 
+       "字段"： CertCheck
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CertInfoList ( Array of CertInfoList ): 表示与加速域名关联的一个 CA 证书列表。列表中的 CA 证书托管在 CDN。CA 证书使用的加密算法可以是 RSA、ECC 或者 SM2。 
+        Switch ( Boolean ): 表示是否启用该特性。该参数有以下取值： 
+            - true：表示启用该特性。 
+            - false：表示禁用该特性。 
+       "字段"： SharedConfig
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        ConfigName ( String ): 表示一个全局配置的名称。该全局配置的 ConfigType 是 deny_ip_access_rule 或者 allow_ip_access_rule。 
+            - deny_ip_access_rule：表示 IP 黑名单。 
+            - allow_ip_access_rule：表示 IP 白名单。 
+       "字段"： IpSource
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        SourceList ( Array of String ): 表示携带客户端 IP 地址的头部列表，有以下取值： 
+            * x-forwarded-for  
+            * x-real-ip 
+        Type ( String ): 表示客户端 IP 地址的获取方式。该参数有以下取值： 
+            * default：表示采用常规方式获取 IP 地址，也就是通过协议层获取 IP 地址。 
+            * custom：表示从 SourceList 指定的头部中获取 IP 地址。但如果指定的头部不存在或者值为空，则采用常规方式获取 IP 地址。 
+       "字段"： NegativeCacheRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示 CDN 执行的操作。该参数值始终是 cache，表示缓存源站的响应状态码。 
+        StatusCode ( String ): 指定一个需要缓存的状态码，可以是 4xx 或者 5xx。4xx 表示 400 到 499 之间的所有状态码。5xx 表示 500 到 599 之间的所有状态码。 
+        Ttl ( Long ): 表示状态码的缓存时间。单位是秒。 
+        IgnoreCase ( Boolean ): 表示 Value 是否是大小写敏感的。 
+            - true：表示大小写不敏感。 
+            - false：表示大小写敏感。 
+       "字段"： OriginArgAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginArgComponents ( Array of OriginArgComponents ): 表示一个操作列表。这些操作定义了 CDN 如何处理回源请求中的查询参数。 
+       "字段"： OriginRewriteRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginRewriteAction ( Object of OriginRewriteAction ): 表示 CDN 执行的动作。 
+       "字段"： RedirectionRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        RedirectionAction ( Object of RedirectionAction ): 表示一个 URL 重定向改写的规则。 
+       "字段"： ReferersType
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CommonType ( Object of CommonType ): 表示一个 CommonType 对象，其包含一个常规 Referer 列表。 
+        RegularType ( Object of RegularType ): 表示一个 RegularType 对象，其包含一个正则表达式列表用来匹配请求中的 Referer 头部。 
+       "字段"： RemoteAuthRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Condition ( Object of Condition ): 表示匹配条件的配置。如果一个请求满足匹配条件，CDN 对该请求执行 RemoteAuthRuleAction 中指定的操作。 
+        RemoteAuthRuleAction ( Object of RemoteAuthRuleAction ): 表示鉴权相关的配置。 
+            当一个请求满足 Condition 中的匹配条件时，CDN 会将其发送至鉴权服务器进行鉴权，并基于鉴权的结果接受或者拒绝该请求。 
+       "字段"： RequestHeaderAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        RequestHeaderInstances ( Array of RequestHeaderInstances ): 表示一个请求头的配置规则列表。每个规则都包含一个头部的相关操作设置。 
+       "字段"： ResponseHeaderAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        ResponseHeaderInstances ( Array of ResponseHeaderInstances ): 表示一个响应头的配置规则列表。每个规则都包含一个头部的相关操作设置。 
+       "字段"： SignedUrlAuthRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Condition ( Object of Condition ): 表示匹配条件的配置。CDN 对符合条件的用户请求进行鉴权。 
+        SignedUrlAuthAction ( Object of SignedUrlAuthAction ): 表示签名计算的配置。 
+       "字段"： TimeoutRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        TimeoutAction ( Object of TimeoutAction ): 表示超时时间的配置。 
+       "字段"： BlockRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        BlockAction ( Object of BlockAction ): 表示一条规则中 CDN 行为的配置。 
+        Condition ( Object of Condition ): 表示该规则中匹配条件的定义。 
+        RuleName ( String ): 表示规则的名称。 
+       "字段"： ClientCertInfoList
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CertId ( String ): 表示列表中一本客户端证书的 ID，以 cert_hosting 开头。 
+       "字段"： OriginRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Actions ( Object of Actions ): 表示一条规则中定义的操作配置。 
+        Condition ( Object of Condition ): 表示该规则中匹配条件的配置。 
+       "字段"： OriginResponseHeaderAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginResponseHeaderInstances ( Array of OriginResponseHeaderInstances ): 表示一个响应头的配置规则列表。每个规则都包含一个头部的相关操作设置。 
+       "字段"： OriginLines
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Address ( String ): 表示列表中一个源站的地址。 
+        InstanceType ( String ): 表示源站的类型。该参数有以下取值： 
+            - ip：表示 IP 地址。 
+            - domain：表示域名。 
+            - tos：表示对象存储桶。 
+        OriginType ( String ): 表示源站的类别。该参数有以下取值： 
+            - primary：表示主源站。 
+            - backup：表示备源站。 
+        HttpPort ( String ): 表示 CDN 使用 HTTP 协议访问该源站时所访问的端口。 
+        HttpsPort ( String ): 表示 CDN 使用 HTTPS 协议访问该源站时所访问的端口。 
+        OriginHost ( String ): 表示回源请求访问的站点域名，适用于源站服务器上有多个站点的情况。该参数的优先级高于全局 OriginHost 参数。 
+        PrivateBucketAccess ( Boolean ): 表示存储桶是否是私有桶。该参数有以下取值： 
+            - true：表示该存储桶是私有桶。 
+            - false：表示该存储桶不是私有桶。 
+        PrivateBucketAuth ( Object of PrivateBucketAuth ): 表示访问存储桶的凭据。 
+        Region ( String ): 表示存储桶所在地域的信息，也就是存储桶的 region code。Region code 参与签名的计算。 
+        Weight ( String ): 表示该源站的权重。权重越大，该源站在 CDN 发送回源请求时被选择到的概率也越大。 
+       "字段"： ConditionRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Object ( String ): 表示匹配对象。该参数有以下取值： 
+            - filetype：表示请求 URL 中的扩展名。 
+            - directory：表示请求 URL 中的某个目录。 
+            - path：表示请求 URL 中的完整路径。 
+            - regex：表示请求 URL 中的路径，通过正则表达式匹配。 
+        Operator ( String ): 表示匹配类型。该参数的值始终是 match，表示如果 Value 匹配了请求中的 Object，该请求就满足这个匹配条件。 
+        Type ( String ): 该参数值始终是 url，表示 "请求 URL"。 
+        Value ( String ): 表示一个或者多个匹配值。 
+       "字段"： CacheHostAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CacheHost ( String ): 表示目标域名。 该目标域名是您账户下的一个加速域名。该参数指示 Domain 共享 CacheHost 的 CDN 缓存。 
+       "字段"： CacheKeyComponents
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示 CDN 如何在请求文件的缓存键中设置查询字符串。该参数有以下取值： 
+            - exclude：表示缓存键不包含请求中的任何查询参数。 
+            - include：表示缓存键包含请求中所有的查询参数。 
+            - includePart：表示缓存键仅包含 Subobject 中指定的查询参数。 
+            - excludePart：表示缓存键包含请求中除了 Subobject 中指定的查询参数之外的所有查询参数。 
+        IgnoreCase ( Boolean ): 表示 Subobject 是否是大小写敏感的。该参数有以下取值： 
+            - true：表示大小写不敏感。 
+            - false：表示大小写敏感。 
+        Object ( String ): 表示缓存键中的一个组成部分。该参数值始终是 querystring，表示查询字符串。 
+        Subobject ( String ): 该参数对应于 Action，表示 CDN 在缓存键中包含的具体查询参数。该参数的说明如下： 
+            - 如果 Action 是 include 或者 exclude，Subobject 的值是 *，表示请求中的全部查询参数。 
+            - 如果 Action 是 includePart 或者 excludePart，Subobject 表示需要保留或者不保留的查询参数。 
+       "字段"： CompressionAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CompressionType ( Array of String ): 表示 CDN 使用的压缩算法。该参数有以下取值： 
+            - br：表示 Brotli 压缩算法。 
+            - gzip：表示 Gzip 压缩算法。 
+            需要留意的是，CDN 基于用户请求中 Accept-Encoding 头部来决定是否对请求文件进行压缩以及使用的压缩算法。 
+        CompressionFormat ( String ): 表示 CDN 基于请求中的 Content-Type 头部对请求进行匹配。该参数有以下取值： 
+            * default：表示如果 Content-Type 头部值在下方的默认列表中，CDN 对请求文件执行 CompressionAction 中配置的操作。 
+            * customize：表示如果 Content-Type 头部值在 CompressionFormat 指定的头部值中，CDN 对请求文件执行 CompressionAction 中配置的操作。 
+            如果该参数未指定或者值为 all，表示 CDN 基于 Condition 中的匹配条件对请求进行匹配。 
+            默认列表 
+            text/html、text/xml、text/plain、text/css、application/javascript、application/x-javascript、application/rss+xml、text/javascript、image/tiff、image/svg+xml、application/json、application/xml、text/plain; charset=utf-8 
+        CompressionTarget ( String ): 表示 Content-Type 的过滤值。 
+            - 如果 CompressionFormat 为 default 或者 all，该参数为 *。 
+            - 如果 CompressionFormat 为 customize，该参数表示一个或者多个文件类型。 
+        MinFileSizeKB ( Long ): 表示文件大小范围的最小值，CDN 仅对大小在 MinFileSizeKB 和 MaxFileSizeKB 所表示的范围内的文件进行压缩。该参数的单位是 KB，使用的进制是 1,024。 
+        MaxFileSizeKB ( Long ): 表示文件大小范围的最大值，单位是 KB，使用的进制是 1,024。如果该参数不指定，表示不限制文件大小的上限。 
+       "字段"： ErrorPageAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示实际的操作。该参数值始终为 redirect。表示对客户端请求进行重定向。 
+        RedirectCode ( String ): 表示重定向的响应状态码。该参数的取值有 301、302、303、307、308。 
+            需要留意的是： 
+            * 对于 301 和 302，如果原请求使用的方法不是 GET，那么客户端向新的URL发送请求时，新请求使用的方法可能变成 GET。 
+            * 对于 303，新请求使用的方法是 GET。 
+            * 对于 307 和 308，新请求使用的方法与原请求相同，不会被改变。 
+        RedirectUrl ( String ): 表示跳转的目标地址。 
+        StatusCode ( String ): 表示一个状态码，状态码可以是 4xx 或者 5xx。4xx 表示 400-499 之间的所有状态码。5xx 表示 500-599 之间的所有状态码。 
+       "字段"： CustomizeRule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        AccessAction ( Object of AccessAction ): 表示该规则中的黑名单或者白名单的配置。 
+       "字段"： DownloadSpeedLimitAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        SpeedLimitRate ( Long ): 表示 CDN 在响应单个请求时的数据传输速度阈值，单位是 B/S，使用的进制是 1,024。 
+            当 LimitType 是 dynamic_limit 时，CDN 优先从 LimitQueryName 所指定的查询参数中获取速度阈值。如果该查询参数不存在或者值为空，则 CDN 使用 SpeedLimitRate 作为速度阈值。 
+        SpeedLimitRateAfter ( Long ): 表示一个初始数据量，单位是 bytes，使用的进制是 1,024。 
+            当 CDN 对一个请求开始传输数据时，在传输的数据量达到该初始数据量前，该限速规则不会启用。 
+            如果该参数值是 0，表示在 CDN 对一个请求开始传输第一个字节时，该限速规则就启用了。 
+        SpeedLimitTime ( Object of SpeedLimitTime ): 表示限速规则启用的日期和时间段。 
+        DynamicLimitUnit ( String ): 当 LimitType 是 dynamic_limit 时，该参数有效，表示速度的单位。该参数有以下取值： 
+            * B/S 
+            * KB/S 
+            * MB/S 
+        LimitQueryName ( String ): 当 LimitType 是 dynamic_limit 时，该参数有效，表示指定的查询参数名称。 
+        LimitType ( String ): 表示如何设置数据传输速度的阈值。该参数有以下取值： 
+            * normal：表示阈值是固定的，在 SpeedLimitRate 中指定。 
+            * dynamic_limit：表示从 LimitQueryName 所指定的查询参数中获取阈值。 
+       "字段"： Certificate
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Certificate ( String ): 表示证书文件的内容。 
+        PrivateKey ( String ): 表示私钥文件的内容。 
+        EncryptionCert ( String ): 表示国密证书的证书文件的内容，用于加密。 
+        EncryptionKey ( String ): 表示国密证书的私钥文件的内容，用于解密。 
+       "字段"： OriginArgComponents
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示 CDN 执行的操作。该参数有以下取值： 
+            - include: 表示回源请求 URL 中包含用户请求 URL 中的全部查询参数。 
+            - exclude：表示回源请求 URL 中不包含用户请求 URL 中的任何查询参数。 
+            - addPart：表示回源请求 URL 中包含用户请求 URL 中的全部查询参数，并额外包含 Subobject 中指定的查询参数。 
+            - includePart：表示如果用户请求 URL 中包含 Subobject 中指定的查询参数，那么回源请求 URL 中包含这些指定的查询参数。 
+            - excludePart：表示回源请求 URL 中包含用户请求 URL 中的全部查询参数，除了Subobject 中指定的查询参数。 
+            - set：表示回源请求 URL 中包含用户请求 URL 中的全部查询参数。同时，对于您在 Subobject 中指定的查询参数和参数值，CDN 会执行以下操作: 
+              - 如果这些查询参数在用户请求 URL 中，CDN 会在回源请求 URL 中将这些参数的值设置为您指定的值。 
+              - 如果用户请求 URL 中不包含这些查询参数，CDN 会在回源请求 URL 中添加这些查询参数。 
+        Object ( String ): 表示 CDN 对哪个对象执行 Action。该参数值始终是 queryString，表示请求 URL 中的查询字符串。 
+        Subobject ( String ): 表示一个或者多个查询参数。 
+            在匹配请求 URL 中的查询参数时，Subobject 中的参数是大小写敏感的。 
+            Subobject 的额外说明如下： 
+            * 当 Action 是  include 或 exclude 时，Subobject 是 *，表示请求 URL 中的所有查询参数。 
+            * 当 Action 是  includePart 或 excludePart 时，Subobject 表示一个或者多个查询参数。例如 param1;param2。 
+            * 当 Action 是  addPart 或 set 时，Subobject 表示一个或者多个查询参数和参数值，格式是 key=value。例如 param1=val1;param2=val2;param3=val3。 
+       "字段"： OriginRewriteAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        SourcePath ( String ): 表示一个正则表达式，用于匹配用户请求 URL 中的对象。 
+            * 当 RewriteType 是 rewrite_path 时，该对象指的是请求 URL 中的路径。 
+            * 当 RewriteType 是 rewrite_url 时，该对象指的是请求 URL 中的路径和查询字符串。 
+            参见 配置示例。 
+        TargetPath ( String ): 表示改写后，回源请求 URL 中的对象。 
+            * 当 RewriteType 是 rewrite_path 时，该对象是回源请求 URL 中的路径。 
+            * 当 RewriteType 是 rewrite_url 时，该对象是回源请求 URL 中的路径和查询字符串。 
+            TargetPath 中的 $1、$2、$3 等用于捕获 SourcePath 中定义的组。 
+            参见 配置示例。 
+        RewriteType ( String ): 表示改写类型。该参数有以下取值： 
+            * rewrite_path：表示对请求 URL 中的路径进行改写。 
+            * rewrite_url：表示对请求 URL 中的路径和查询字符串进行改写。 
+       "字段"： RedirectionAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        RedirectCode ( String ): 表示 URL 重定向的响应状态码。该参数的取值有 301、302、303、307、308。 
+            需要留意的是： 
+            * 对于 301 和 302，如果原请求使用的方法不是 GET，那么客户端向新的URL发送请求时，新请求使用的方法可能变成 GET。 
+            * 对于 303，新请求使用的方法是 GET。 
+            * 对于 307 和 308，新请求使用的方法与原请求相同，不会被改变。 
+        SourcePath ( String ): 表示文件的原路径。也就是请求中包含的路径。 
+        TargetHost ( String ): 表示目标路径所归属站点的域名或者 IP 地址。 
+        TargetPath ( String ): 表示跳转后的目标路径。 
+        TargetProtocol ( String ): 表示 URL重定向后的新请求所使用的协议。该参数有以下取值： 
+            - followclient：表示使用原请求的协议。 
+            - http：表示新请求强制使用 HTTP 协议。 
+            - https：表示新请求强制使用 HTTPS 协议。 
+        TargetQueryComponents ( Object of TargetQueryComponents ): 表示原请求 URL 中的查询参数的处理方式。 
+       "字段"： CommonType
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        IgnoreCase ( Boolean ): 表示 CommonType 下的 Referers 列表是否是大小写敏感的。该参数有以下取值： 
+            - true: 表示大小写不敏感。 
+            - false: 表示大小写敏感。 
+        Referers ( Array of String ): 表示一个常规 Referer 列表， 
+        IgnoreScheme ( Boolean ): 表示是否校验请求中 Referer 头部的 scheme，也就是校验 Referer 是否包含 http:// 或者 https://。该参数有以下取值： 
+            - true: 表示不校验 Referer 是否包含 scheme。在这个情况下，无论请求中的 Referer 是否包含 scheme，CDN 都会将 Referer 与您配置的名单进行匹配。 
+            - false: 表示 CDN 会先校验 Referer 是否包含 scheme。如果 Referer 不包含 scheme，CDN 判定请求与您配置的名单不匹配。 
+            该配置对 RegularType 下的 Referers 列表不生效，因为 CDN 依赖正则表达式来判断 Referer 是否匹配正则名单。 
+        ContMainDomain ( Boolean ): 如果 CommonType 下 Referers 列表中包含泛域名，该参数表示泛域名是否可以匹配主域名。该参数有以下取值： 
+            * true：表示泛域名可以匹配主域名。 
+            * false：表示泛域名不匹配主域名。 
+            示例 
+            Referers 是一个黑名单，包含 *.example.com。对于来自 example.com 的请求， 
+            * 如果 ContMainDomain 为 true，则该请求匹配 Referers。 
+            * 如果 ContMainDomain 为 false，则该请求不匹配 Referers。 
+       "字段"： RegularType
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Referers ( Array of String ): 表示一个用于匹配 Referer 的正则表达式列表。 
+       "字段"： RemoteAuthRuleAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        AuthModeConfig ( Object of AuthModeConfig ): 表示鉴权服务器的配置。 
+        AuthResponseConfig ( Object of AuthResponseConfig ): CDN 需要对鉴权服务器返回的鉴权状态码进行处理。该参数表示相关的配置。 
+        QueryStringRules ( Object of QueryStringRules ): 表示鉴权请求的参数设置。 
+        RequestBodyRules ( String ): 表示鉴权请求正文的规则。如果该参数值为 default，表示请求正文为空（""）。 
+        RequestHeaderRules ( Object of RequestHeaderRules ): 表示鉴权请求头的设置。 
+       "字段"： RequestHeaderInstances
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示对请求头的操作。该参数有以下取值： 
+            - set：表示设置一个头部。设置操作包括添加与修改。如果请求中已包含该头部，该头部的值会被覆盖。如果请求中没有包含该头部，该头部会被添加。 
+            - delete，表示删除一个头部。 
+        Key ( String ): 表示一个头部的名称。 
+        ValueType ( String ): 表示 Key 的取值类型。该参数仅当 Action 是 set 的时候才有效。如果 Action 不是 set，该参数无效。该参数有以下取值： 
+            - constant：表示 Key 的值是一个固定字符串。 
+            - variable：表示 Key 的值来自一个变量。 
+            - customize：表示 Key 的值是变量与固定字符串拼接后的一个字符串。 
+        Value ( String ): 表示 Key 的值。该参数仅当 Action 是 set 的时候才有效。如果 Action 不是 set，该参数无效。 
+       "字段"： ResponseHeaderInstances
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示对响应头的操作。该参数有以下取值： 
+            - set：表示设置一个头部。设置操作包括添加与修改。如果源站响应中已包含该头部，该头部的值会被覆盖。如果源站响应中没有包含该头部，该头部会被添加。 
+            - delete，表示删除一个头部。 
+        Key ( String ): 表示一个头部的名称。 
+        ValueType ( String ): 表示 Key 的取值类型。该参数仅当 Action 是 set 的时候才有效。如果 Action 不是 set，该参数无效。该参数有以下取值： 
+            - constant：表示 Key 的值是一个字符串。 
+            - variable：表示 Key 的值来自一个变量。 
+            - customize：表示 Key 的值是一个变量与字符串拼接后的字符串。 
+        AccessOriginControl ( Boolean ): 表示在 CDN 响应用户请求时，是否校验请求中的 Origin 头部。 
+            该参数有以下取值： 
+            - true：表示 CDN 会校验 Origin 头部。如果校验成功，CDN 会在响应中包含 Access-Control-Allow-Origin 头部。头部值与 Origin 头部值相同。如果校验失败，响应中不会包含 Access-Control-Allow-Origin 头部。 
+            - false：表示 CDN 不会校验 Origin 头部。在响应中，CDN 会包含 Access-Control-Allow-Origin 头部。头部值是您配置的 Access-Control-Allow-Origin 的内容。 
+            该参数仅在以下条件都满足的情况下有效： 
+            - Action 是 set。 
+            - Key 是 Access-Control-Allow-Origin。 
+            - ValueType 是 constant。 
+        Value ( String ): 表示 Key 的值。该参数仅当 Action 是 set 的时候才有效。如果 Action 不是 set，该参数无效。 
+       "字段"： SignedUrlAuthAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Duration ( Long ): 表示签名的有效时间，单位是秒。该参数与请求中包含时间戳搭配使用，用来计算签名的过期时间。签名的过期时间 = 时间戳 + Duration。在 CDN 收到某个请求时，如果签名的过期时间小于当前时间，CDN 判定签名已过期。 
+        MasterSecretKey ( String ): 表示主密钥， 
+        URLAuthType ( String ): 表示签名类型。该参数有以下取值：typea、typeb、typec、typed、typee，每种类型得鉴权说明见 配置 URL 鉴权 。 
+        BackupSecretKey ( String ): 表示备密钥。 
+        CustomVariableRules ( Object of CustomVariableRules ): 表示自定义签算变量，仅当 URLAuthType 为 typee 时有效。 
+        KeepOriginArg ( Boolean ): 表示 CDN 是否在回源请求中包含用户请求中的签名参数。仅当 URLAuthType 是 typea 或 typed 时，该参数有效。 
+            该参数有以下取值： 
+            * true：表示 CDN 在回源请求中包含签名参数。 
+            * false：表示 CDN 在回源请求中不包含签名参数。 
+        RewriteM3u8 ( Boolean ): 对于 HLS Manifest (.m3u8) 的请求，该参数表示 CDN 是否要修改 Manifest，从而为每个视频分片生成签名并将签名添加到 URI 中。 
+            该参数有以下取值： 
+            - true：表示需要修改 Manifest。 
+            - false：表示不需要修改 Manifest。 
+            当前，CDN 不会修改压缩文件。因此，在以下任何情况下，CDN 都不会修改 Manifest。 
+            * 源站响应中包含 Content-Encoding 头部。该标头表明该 Manifest 已被压缩。 
+            * 用户请求匹配 "智能压缩" 特性中的规则。 
+        SignName ( String ): 表示签名参数的名称。 
+            当 URLAuthType 为 typeb、typec 时，该参数不生效。 
+        SignatureRule ( Array of String ): 当 URLAuthType 为 typee 时，该参数有效，表示需要纳入签名计算的字段。 
+            必须纳入的字段如下： 
+            - key：表示MasterSecretKey或 BackupSecretKey 参数的值。 
+            - uri：表示用户请求资源的 URI。 
+            - TimeName：表示 TimeFormat 参数的值。 
+            可选择纳入签名计算的字段如下： 
+            - domain：表示加速域名。 
+            - referer：表示用户请求携带的 referer 值。 
+            - ua：表示用户请求携带的 User-Agent 值。 
+            - ip：表示用户请求的客户端 IP。 
+            - origin：表示用户请求携带的 Origin 值。 
+            - 自定义变量：表示 CustomVariableInstances 中定义的变量名称。 
+            CDN 按列表中字段出现顺序将这些字段拼接成一个字符串，然后计算该字符串的 MD5 值。该 MD5 值就是签名。 
+        TimeFormat ( String ): 表示 TimeName 使用的进制。该参数有以下取值： 
+            - decimal：十进制。 
+            - heximal：十六进制。 
+            当 URLAuthType 为 typed、typee 时，该参数有效。当 URLAuthType 为 typec 时，无论该参数是否设置，该参数的值会被强制设置为 heximal。对于 URLAuthType 的其他值，该参数不生效。 
+        TimeName ( String ): 表示时间戳参数的名称。 
+            当 URLAuthType 为 typed、typee 时，该参数有效。对于其他类型，该参数不生效。 
+        RewriteM3u8Rule ( Object of RewriteM3u8Rule ): 表示 "M3U8 改写" 功能的配置。该配置仅当 RewriteM3u8 是 true 时才有效。 
+        AuthAlgorithm ( String ): 表示签名计算使用的算法。该配置有以下取值： 
+            - md5：表示 MD5 算法。 
+            - sha256：表示 SHA-256 算法。 
+        DeleteAuthCacheAndOrigin ( Boolean ): 表示 CDN 是否在回源请求和缓存键中包含用户请求中的签名参数，仅当 URLAuthType 是 typee 时有效。 
+            该参数有以下取值： 
+            * true：表示回源请求和缓存键中均不包含签名参数。 
+            * false：表示回源请求和缓存键中均包含签名参数。 
+       "字段"： TimeoutAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        HttpTimeout ( Long ): 表示 HTTP 请求的超时时间，单位是秒。 
+        TcpTimeout ( Long ): 表示 TCP 请求的超时时间，单位是秒。 
+       "字段"： BlockAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示 CDN 如何处理匹配 Condition 的请求。该参数有以下取值： 
+            - refuse：表示 CDN 拒绝请求并响应一个 4xx 的错误码。错误码在 StatusCode 中指定。 
+            - redirect：表示 CDN 将请求重定向到 RedirectUrl 中指定的 URL。 
+        StatusCode ( String ): 表示对于匹配 Condition 的用户请求，CDN 的响应状态码。 
+        ErrorPage ( String ): - 当 Action 是 refuse 时，该参数的说明如下： 
+            	- 该参数表示 "全局配置" 特性中的一个自定义响应页面的名称。也就是说，当 CDN 拒绝请求时，返回该自定义页面。 
+            	- 如果该参数未指定，表示 CDN 使用 StatusCode 中指定错误码的标准响应正文。 
+            - 当 Action 是 redirect 时，该参数无效。 
+        RedirectUrl ( String ): - 当 Action 是 redirect 时，该参数表示重定向 URL。 
+            - 当 Action 是 refuse 时，该参数无效。 
+       "字段"： Actions
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        OriginLines ( Array of OriginLines ): 表示一个源站配置列表。 
+       "字段"： OriginResponseHeaderInstances
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示 CDN 对响应头的操作。该参数有以下取值： 
+            - set：表示设置一个头部。设置操作包括添加与修改。如果源站响应中已包含该头部，该头部的值会被覆盖。如果源站响应中没有包含该头部，该头部会被添加。 
+            - delete：表示删除一个头部。 
+        Key ( String ): 表示一个头部的名称。 
+            参见 常用头部。 
+        Value ( String ): 表示 Key 的值。该参数仅当 Action 是 set 的时候才有效。如果 Action 不是 set，该参数无效。 
+        ValueType ( String ): 表示 Key 的取值类型。该参数仅当 Action 是 set 的时候才有效。如果 Action 不是 set，该参数无效。该参数有以下取值： 
+            - constant：表示 Key 的值是一个固定字符串。 
+            - variable：表示 Key 的值来自一个变量。 
+            - customize：表示 Key 的值是一个变量与固定字符串拼接后的字符串。 
+        Object ( String ): 表示该规则对哪些用户请求生效。该参数有以下取值： 
+            - default：表示该规则仅对源站响应中包含以下响应码的用户请求生效： 
+            	- 200、201、204、206、301、302、303、304、307、308 
+            - all_request：表示该规则对所有用户请求生效。 
+       "字段"： PrivateBucketAuth
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 该参数值是 true。 
+        AuthType ( String ): 表示存储桶使用的是哪个对象存储服务所提供的鉴权方式。该参数有以下取值： 
+            - tos：表示火山引擎 TOS。 
+            - cos：表示腾讯云 COS。 
+            - oss：表示阿里云 OSS。 
+            - aws：表示 AWS S3。该取值用于兼容存量配置。 
+            - aws_common：表示 AWS S3 和 S3 兼容的鉴权方式。 
+        TosAuthInformation ( Object of TosAuthInformation ): 表示存储桶的访问凭证（AccessKey）。 
+            当 AuthType 是 tos 时： 
+            * 如果您指定了 TosAuthInformation，CDN 使用 AccessKey 访问存储桶。 
+            * 如果 TosAuthInformation 未指定，CDN 使用跨服务授权方式访问存储桶。 
+       "字段"： AccessAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        AllowEmpty ( Boolean ): 表示当用户请求不包含指定头部时，CDN 处理请求的方式。该参数有以下取值： 
+            - true：表示如果请求不包含指定头部，则该请求被认为匹配您配置的头部值列表。 
+            - false：表示如果请求不包含指定头部，则该请求被认为不匹配您配置的头部值列表。 
+        ListRules ( Array of String ): 表示一个正则表达式列表，用于匹配请求头的值。 
+            列表中正则表达式之间的关系是或。也就是说，如果一个用户请求中 RequestHeader 的值匹配任何一个正则表达式，该规则就匹配了这个请求。 
+        RequestHeader ( String ): 表示一个指定的请求头。头部名称不区分大小写。 
+        RuleType ( String ): 表示名单的类型。该参数有以下取值： 
+            - allow：表示该规则中定义的是一个白名单。如果一个用户请求不匹配白名单，CDN 会拒绝该请求，响应 403 状态码。 
+            - deny：表示该规则中定义的是一个黑名单。如果一个用户请求匹配了黑名单，CDN 会拒绝该请求，响应 403 状态码。 
+       "字段"： SpeedLimitTime
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        DayWeek ( String ): 表示该限速规则启用的日期，有以下取值：monday，tuesday，wednesday，thursday，friday，saturday，sunday，unlimited。unlimited 表示每天。 
+            您可以指定一个或多个日期，多个日期之间使用分号（;）分隔。 
+        BeginTime ( String ): 表示该限速规则启用的开始时间，格式是 mm:ss。 
+            如果 DayWeek 是 unlimited, BeginTime 为 00:00。 
+        EndTime ( String ): 表示该限速规则启用的结束时间，格式是 mm:ss。 
+            如果 DayWeek 是 unlimited, EndTime 为 23:59。 
+       "字段"： TargetQueryComponents
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示原请求 URL 中的查询参数的处理方式。该参数有以下取值： 
+            - include：表示在跳转后的 URL 中包含原请求 URL 中的所有查询参数。 
+            - exclude：表示在跳转后的 URL 中不包含原请求 URL 中的任何查询参数。 
+            - includePart：表示在跳转后的 URL 中包含原请求 URL 中特定的查询参数。 
+            - excludePart：表示在跳转后的 URL 中不包含原请求 URL 中特定的查询参数。 
+        Value ( String ): 表示要保留或删除的查询参数。 
+            如果 Action 是 include 或者 exclude, 则 Value 为 *，表示所有的查询参数。 
+       "字段"： AuthModeConfig
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        MasterRemoteAddr ( String ): 表示鉴权服务器的主地址。 
+        PathType ( String ): 表示鉴权请求的路径。鉴权地址和请求路径组成了完整的鉴权 URL。CDN 会把用户的请求转发到该鉴权 URL。该参数有以下取值： 
+            - constant：表示鉴权请求中的路径与用户请求中的路径相同。 
+            - variable：表示鉴权请求中的路径在 pathValue 参数中指定。 
+        RequestMethod ( String ): 表示在发送鉴权请求时，CDN 所使用的请求方法。该参数有以下取值： 
+            - default：表示鉴权请求所使用的方法与用户的请求相同。 
+            - get：表示鉴权请求使用 GET 方法。 
+            - post：表示鉴权请求使用 POST方法。 
+            - head：表示鉴权请求使用 HEAD 方法。 
+        BackupRemoteAddr ( String ): 表示鉴权服务器的备地址。 
+        PathValue ( String ): 表示鉴权请求的路径. 
+       "字段"： AuthResponseConfig
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CacheAction ( Object of CacheAction ): CDN 可以缓存鉴权状态码。该参数表示相关的配置。 
+        ResponseAction ( Object of ResponseAction ): 表示鉴权失败时，CDN 如何响应用户。 
+        StatusCodeAction ( Object of StatusCodeAction ): 表示 CDN 对鉴权状态码的处理方式。 
+        TimeOutAction ( Object of TimeOutAction ): 表示鉴权超时后，CDN 如何处理鉴权请求。 
+       "字段"： QueryStringRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        QueryStringComponents ( Object of QueryStringComponents ): 表示鉴权请求参数的设置策略。 
+        QueryStringInstances ( Array of QueryStringInstances ): 表示鉴权请求中额外的参数设置。 
+       "字段"： RequestHeaderRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        RequestHeaderComponents ( Object of RequestHeaderComponents ): 表示鉴权请求头的设置策略。 
+        RequestHeaderInstances ( Array of RequestHeaderInstances ): 表示一组鉴权请求头的设置。 
+            需要留意的是，在 CDN 发起鉴权请求时，请求中可能已经包含了以下头部： 
+            - X-Forwarded-Protocol，X-Forwarded-Proto，X-Client-Scheme：这三个头部都表示用户请求所使用协议，没有区别。 
+            - X-Real-IP：表示用户真实的 IP 地址。该头部的值不会受代理服务器的影响。 
+            - X-Forwarded-For：表示用户的 IP 地址。如果用户的请求经过了代理服务器，该头部的值会变成代理服务器的 IP 地址。 
+            如果该参数中设置了这些头部，这些头部的原始值会被覆盖。 
+        RequestHost ( String ): 表示鉴权请求中 HOST 头部的值。如果该参数的值是 default，表示 HOST 头部的值与您的加速域名相同。 
+       "字段"： CustomVariableRules
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        CustomVariableInstances ( Array of CustomVariableInstances ): 表示一个变量列表。 
+       "字段"： RewriteM3u8Rule
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        DeleteParam ( Boolean ): 表示在改写分片 URI 时是否保留 URL 中原有的参数。该参数有以下取值： 
+            - true：表示删除原有参数。 
+            - false：表示保留原有参数。 
+            需要留意的是，该参数的设置影响签名的计算。参见 M3U8 改写功能的字段描述。 
+        KeepM3u8Param ( Boolean ): 表示是否将 HLS Manifest 请求中的不表示签名的查询参数添加到分片 URI 中。该参数有以下取值： 
+            - true：表示在分片 URI 中添加查询参数。 
+            - false：表示不添加查询参数。 
+            需要留意的是，该参数的设置影响签名的计算。参见 M3U8 改写功能的字段描述。 
+        RewriteTag ( Object of RewriteTag ): 表示 "标签改写" 的配置。 
+       "字段"： TosAuthInformation
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        AccessKeyId ( String ): 表示访问凭证中的 AccessKey ID，在腾讯云称为 SecretId。 
+        AccessKeySecret ( String ): 表示访问凭证中的 AccessKey Secret，在腾讯云称为 SecretKey。 
+       "字段"： ResponseAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        StatusCode ( String ): 表示鉴权失败时，CDN 响应用户的状态码。 
+       "字段"： StatusCodeAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        DefaultAction ( String ): 表示如果鉴权状态码既不是 FailCode，又不是 SuccessCode 时，CDN 处理鉴权请求的方式。该参数有以下取值： 
+            - reject：表示 CDN 认为鉴权失败。 
+            - pass：表示 CDN 认为鉴权成功。 
+        FailCode ( String ): 表示鉴权失败时的鉴权状态码。 
+        SuccessCode ( String ): 表示鉴权成功时的鉴权状态码。 
+       "字段"： TimeOutAction
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示鉴权超时后，CDN 处理鉴权请求的策略。该参数有以下取值： 
+            - reject：表示 CDN 认为鉴权失败。 
+            - pass：表示 CDN 认为鉴权成功。 
+        Time ( Long ): 表示鉴权超时的时间，单位是毫秒。 
+       "字段"： QueryStringComponents
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示鉴权请求是否包含用户请求 URL 中的查询参数。该参数有以下取值： 
+            - exclude：表示鉴权请求不包含任何查询参数。 
+            - include：表示鉴权请求包含所有查询参数。 
+            - includePart：表示鉴权请求包含指定的查询参数。 
+        Value ( String ): 表示 Action 参数所对应的参数值。 
+       "字段"： QueryStringInstances
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示如何设置鉴权请求参数。该参数值始终为 set。set 表示设置参数。Key 中指定了需要设置的鉴权请求参数。如果指定的鉴权请求参数不存在，CDN 会在鉴权请求中添加该参数。如果您指定的鉴权请求参数已存在，CDN 会使用 Value 的值作为该鉴权请求参数的值。 
+        Key ( String ): 表示您需要设置的鉴权请求参数。 
+        Value ( String ): 表示鉴权请求参数的值。 
+        ValueType ( String ): 表示 Key 中设置的鉴权请求参数的类型。ValueType 有以下取值： 
+            - constant：表示鉴权请求参数是一个常量。 
+            - variable：表示鉴权请求参数的值来自一个变量。 
+            - customize：表示鉴权请求参数的值是一个变量与固定字符串拼接后的字符串。 
+       "字段"： RequestHeaderComponents
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Action ( String ): 表示鉴权请求头是否包含用户请求头。该参数有以下取值： 
+            - exclude：表示鉴权请求头中不包含任何用户请求头。 
+            - include：表示鉴权请求头中包含所有用户请求头。 
+            - includePart：表示鉴权请求头包含指定的用户请求头。 
+        Value ( String ): 表示 Action 参数所对应的参数值。 
+       "字段"： CustomVariableInstances
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Operator ( String ): 表示变量的匹配方式。该参数的取值始终是 match。 
+        Type ( String ): 表示变量的类型。该参数有以下取值： 
+            - queryString：表示该变量是请求中的一个查询参数。 
+            - requestHeader：表示该变量是请求中的一个头部字段。 
+        Value ( String ): 表示变量的名称。 
+       "字段"： RewriteTag
+        参数 ( 类型 ): 描述 
+        ---- ( ---- ): ---- 
+        Switch ( Boolean ): 表示是否需要改写额外标签中的分片 URL。该参数有以下取值： 
+            * true: 表示需要改写额外标签。 
+            * false：表示无额外标签需要改写。 
+        Tags ( Array of String ): 表示除默认标签外，需要对其下分片 URI 进行改写的额外标签列表。 
     """,
     "list_domain_versions": r"""
     Args:
